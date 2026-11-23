@@ -1,0 +1,19 @@
+services:
+  db:
+    image: mongodb/mongodb-atlas-local:latest
+    container_name: resolveiq-db
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ping:1}).ok' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+volumes:
+  mongo_data:
+  mongo_config:
