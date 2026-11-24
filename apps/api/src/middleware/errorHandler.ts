@@ -1,0 +1,24 @@
+import { Request, Response, NextFunction } from "express";
+import { ZodError } from "zod";
+import { AppError } from "../utils/AppError";
+
+export function notFound(_req: Request, res: Response) {
+  res.status(404).json({ error: { code: "NOT_FOUND", message: "Route not found" } });
+}
+
+export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {
+  if (err instanceof ZodError) {
+    return res.status(400).json({
+      error: {
+        code: "VALIDATION_ERROR",
+        message: "Invalid input",
+        details: err.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+      },
+    });
+  }
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json({ error: { code: err.code, message: err.message } });
+  }
+  console.error("Unhandled error:", err);
+  res.status(500).json({ error: { code: "INTERNAL", message: "Something went wrong" } });
+}

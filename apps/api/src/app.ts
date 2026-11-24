@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
+import { authRoutes } from "./routes/auth.routes";
+import { notFound, errorHandler } from "./middleware/errorHandler";
 
 export const app = express();
 
@@ -19,3 +21,8 @@ app.get("/api/v1/health", (_req, res) => {
     database: dbReady ? "connected" : "disconnected",
   });
 });
+
+app.use("/api/v1/auth", authRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
