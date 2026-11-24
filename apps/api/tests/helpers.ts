@@ -48,3 +48,21 @@ export async function findMemberId(admin: { agent: Agent }, email: string) {
   const list = await admin.agent.get("/api/v1/members");
   return list.body.items.find((m: { user: { email: string } }) => m.user.email === email).id as string;
 }
+export async function createCustomer(slug: string, email: string) {
+  const agent = request.agent(app);
+  const res = await agent.post("/api/v1/auth/register-customer").send({
+    name: "Customer", email, password: "Password123", companySlug: slug,
+  });
+  return { agent, userId: res.body.user.id as string };
+}
+
+export async function submitTicket(
+  customer: { agent: Agent },
+  subject = "Order not delivered",
+  category = "DELIVERY"
+) {
+  const res = await customer.agent.post("/api/v1/tickets").send({
+    subject, description: "My order has not arrived for 5 days.", category,
+  });
+  return res.body.ticket as { id: string; number: number; status: string };
+}

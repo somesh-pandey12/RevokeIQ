@@ -8,6 +8,7 @@ import { env } from "./config/env";
 import { authRoutes } from "./routes/auth.routes";
 import { invitationRoutes, memberRoutes, companyRoutes } from "./routes/team.routes";
 import { notFound, errorHandler } from "./middleware/errorHandler";
+import { ticketRoutes } from "./routes/ticket.routes";
 
 export const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/v1/auth", authLimiter, authRoutes);
 app.use("/api/v1/invitations", invitationRoutes);
 app.use("/api/v1/members", memberRoutes);
 app.use("/api/v1/companies", companyRoutes);
+app.use("/api/v1/tickets", ticketRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
