@@ -66,7 +66,7 @@ export async function login(input: { email: string; password: string; companySlu
     if (!company) throw new AppError(401, "Invalid email or password", "INVALID_CREDENTIALS");
     filter.tenantId = company._id;
   }
-  const member = await CompanyMember.findOne(filter);
+  const member = await CompanyMember.findOne(filter).setOptions({ skipTenantGuard: true });
   if (!member) throw new AppError(403, "No active company membership", "NO_MEMBERSHIP");
 
   const company = await Company.findById(member.tenantId);

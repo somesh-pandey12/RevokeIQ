@@ -11,6 +11,7 @@ const schema = z.object({
   JWT_SECRET: z.string().min(32, "JWT_SECRET kam se kam 32 characters ka ho"),
   JWT_EXPIRES_IN: z.string().default("7d"),
   COOKIE_NAME: z.string().default("resolveiq_session"),
+    WEB_URL: z.string().default("http://localhost:3000"),
 });
 
 export const env = schema.parse(process.env);

@@ -4,6 +4,8 @@ import * as authService from "../services/auth.service";
 import { registerCompanySchema, registerCustomerSchema, loginSchema } from "../validators/auth.validators";
 import { User } from "../models/user.model";
 import { Company } from "../models/company.model";
+import * as invitationService from "../services/invitation.service";
+import { acceptInvitationSchema } from "../validators/team.validators";
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
@@ -50,4 +52,8 @@ export async function me(req: Request, res: Response) {
     company: company && { id: company.id, name: company.name, slug: company.slug },
     role: auth.role,
   });
+}
+export async function acceptInvitation(req: Request, res: Response) {
+  const input = acceptInvitationSchema.parse(req.body);
+  respond(res, 201, await invitationService.acceptInvitation(input));
 }

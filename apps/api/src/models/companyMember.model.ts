@@ -1,4 +1,5 @@
 import { Schema, model, Types } from "mongoose";
+import { tenantGuard } from "./plugins/tenantGuard";
 
 export const ROLES = ["ADMIN", "AGENT", "CUSTOMER"] as const;
 export type Role = (typeof ROLES)[number];
@@ -13,6 +14,7 @@ const memberSchema = new Schema(
   { timestamps: true }
 );
 memberSchema.index({ tenantId: 1, userId: 1 }, { unique: true });
+memberSchema.plugin(tenantGuard);
 
 export type MemberDoc = {
   _id: Types.ObjectId;
